@@ -2,21 +2,26 @@ import json
 with open(r'd:\New folder\temp_repo\temp_repo.ipynb', 'r', encoding='utf-8') as f:
     nb = json.load(f)
 
-# Add Bird class to Q1
+# Add Teacher subclass to Q2 (Person/Student cell)
 for cell in nb['cells']:
-    if cell['cell_type'] == 'code' and any('class Cat(Animal):' in s for s in cell.get('source', [])):
+    if cell['cell_type'] == 'code' and any('class Student(Person):' in s for s in cell.get('source', [])):
+        cell['source'] = [
+            line.replace(
+                '# Solution\n',
+                'class Teacher(Person):\n'
+                '    def __init__(self, name: str, age: int, subject: str):\n'
+                '        super().__init__(name, age)\n'
+                '        self.subject = subject\n'
+                '\n'
+                '    def __str__(self):\n'
+                '        return f"{self.name} teaches {self.subject}"\n'
+                '\n'
+                '# Solution\n'
+            ) for line in cell['source']
+        ]
         cell['source'].append("\n")
-        cell['source'].append("class Bird(Animal):\n")
-        cell['source'].append("    def fly(self):\n")
-        cell['source'].append('        print(f"{self.name} is flying!")\n')
-        cell['source'].append("\n")
-        cell['source'].append('    def __repr__(self):\n')
-        cell['source'].append('        return f"Bird({self.name})"\n')
-        cell['source'].append("\n")
-        cell['source'].append('my_bird = Bird("Tweety")\n')
-        cell['source'].append("my_bird.make_sound()\n")
-        cell['source'].append("my_bird.fly()\n")
-        cell['source'].append("print(repr(my_bird))\n")
+        cell['source'].append('teacher = Teacher("Dr. Smith", 45, "Physics")\n')
+        cell['source'].append("print(teacher)\n")
         break
 
 with open(r'd:\New folder\temp_repo\temp_repo.ipynb', 'w', encoding='utf-8') as f:
